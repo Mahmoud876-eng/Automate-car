@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | SafeSwarm Smart Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #00c853;
+            --accent: #ff3d00;
+            --dark: #202124;
+            --light: #f8f9fa;
+            --gray: #5f6368;
+            --gray-light: #dadce0;
+            --error: #d93025;
+            --success: #0d904f;
+            --warning: #f9ab00;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        /* Registration Container */
+        .register-container {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            min-height: 700px;
+            background-color: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-left {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .register-left h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .register-left p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .register-features {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .register-features li {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .register-features i {
+            background-color: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .register-features h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .register-features p {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .register-right {
+            flex: 1.2;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .register-header h2 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            color: var(--gray);
+        }
+
+        /* Registration Form */
+        .register-form {
+            width: 100%;
+        }
+
+        /* Form Progress Bar */
+        .progress-bar {
+            display: flex;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--gray-light);
+            z-index: 1;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--gray-light);
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .step-circle {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .progress-step.completed .step-circle {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-label .required {
+            color: var(--error);
+            margin-left: 3px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+
+        .form-control.error {
+            border-color: var(--error);
+        }
+
+        .form-control.success {
+            border-color: var(--success);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background-color: var(--gray-light);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--error);
+            border-radius: 2px;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-text {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Error and Success Messages */
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background-color: rgba(13, 144, 79, 0.1);
+            color: var(--success);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .info-message {
+            background-color: rgba(26, 115, 232, 0.1);
+            color: var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Password Visibility Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Form Navigation Buttons */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .form-button {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-prev {
+            background-color: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-prev:hover {
+            background-color: rgba(26, 115, 232, 0.1);
+        }
+
+        .btn-next, .btn-submit {
+            background-color: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+        }
+
+        .btn-next:hover, .btn-submit:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+        }
+
+        .btn-next:disabled, .btn-submit:disabled {
+            background-color: var(--gray-light);
+            border-color: var(--gray-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Account Type Selection */
+        .account-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .account-type {
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .account-type:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-type.selected {
+            border-color: var(--primary);
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+
+        .account-type-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(26, 115, 232, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .account-type-icon i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .account-type h4 {
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .account-type p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0;
+        }
+
+        .account-type-check {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .account-type.selected .account-type-check {
+            opacity: 1;
+        }
+
+        /* Terms and Conditions */
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .terms input {
+            margin-top: 4px;
+            accent-color: var(--primary);
+        }
+
+        .terms label {
+            font-size: 0.95rem;
+            color: var(--gray);
+        }
+
+        .terms a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            color: var(--gray);
+            margin-top: 30px;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-column p {
+            color: #bdc1c6;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #bdc1c6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc1c6;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .register-container {
+                flex-direction: column;
+                max-width: 600px;
+                min-height: auto;
+            }
+
+            .register-left {
+                padding: 40px 30px;
+            }
+
+            .register-left h2 {
+                font-size: 1.8rem;
+            }
+
+            .register-right {
+                max-height: none;
+                overflow-y: visible;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .register-left, .register-right {
+                padding: 40px 25px;
+            }
+
+            .account-types {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .register-left h2 {
+                font-size: 1.6rem;
+            }
+
+            .register-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .form-navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .form-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <h1>Safe<span>Swarm</span></h1>
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="#">How It Works</a>
+                    <a href="#">Technology</a>
+                    <a href="login.html">Login</a>
+                    <a href="register.html" class="active">Register</a>
+                </div>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="register-container">
+                <!-- Left Panel with Info -->
+                <div class="register-left">
+                    <h2>Join the SafeSwarm Network</h2>
+                    <p>Register for access to the world's most advanced vehicle safety system. Help us create accident-free roads through swarm intelligence.</p>
+                    
+                    <ul class="register-features">
+                        <li>
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Enhanced Safety</h4>
+                                <p>Your vehicles become part of a protective swarm that prevents accidents before they happen.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-chart-line"></i>
+                            <div>
+                                <h4>Real-Time Analytics</h4>
+                                <p>Access detailed safety reports and performance analytics for your fleet.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h4>Community Network</h4>
+                                <p>Join thousands of vehicles already making roads safer through coordinated intelligence.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right Panel with Registration Form -->
+                <div class="register-right">
+                    <div class="register-header">
+                        <h2>Create Your Account</h2>
+                        <p>Join SafeSwarm in 3 simple steps</p>
+                    </div>
+
+                    {% if error %}
+                    <div class="success-message show" style="background-color: rgba(217,48,37,0.1); color: var(--error);">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ error }}</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar">
+                        <div class="progress-step active" data-step="1">
+                            <div class="step-circle">1</div>
+                            <div class="step-label">Account Type</div>
+                        </div>
+                        <div class="progress-step" data-step="2">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Personal Info</div>
+                        </div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Verification</div>
+                        </div>
+                    </div>
+
+                    <!-- Begin Form posting to backend -->
+                    <form class="register-form" id="registerForm" action="/register" method="POST">
+                        <input type="hidden" id="accountTypeHidden" name="accountType">
+                        <input type="hidden" id="usernameHidden" name="username">
+
+                    <!-- Step 1: Account Type -->
+                    <div class="form-step active" id="step1">
+                        <div class="info-message">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Select the account type that best describes how you'll use SafeSwarm.</span>
+                        </div>
+
+                        <div class="account-types">
+                            <div class="account-type" data-type="personal">
+                                <div class="account-type-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="account-type-check">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <h4>Personal Vehicle</h4>
+                                <p>For individual car owners who want enhanced safety features.</p>
+                            </div>
+
+                            <div class="account-type" data-type="fleet">
+                                <div class="account-type-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="account-type-check">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <h4>Fleet Manager</h4>
+                                <p>For companies managing multiple vehicles in a coordinated fleet.</p>
+                            </div>
+
+                            <div class="account-type" data-type="developer">
+                                <div class="account-type-icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <div class="account-type-check">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <h4>Developer/API</h4>
+                                <p>For developers integrating SafeSwarm into applications or vehicles.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <div></div> <!-- Empty div for spacing -->
+                            <button type="button" class="form-button btn-next" id="nextStep1">Next Step</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Personal Information -->
+                    <div class="form-step" id="step2">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="firstName">First Name <span class="required">*</span></label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Enter your first name" required>
+                                </div>
+                                <div class="error-message" id="firstNameError">First name is required</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">Last Name <span class="required">*</span></label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Enter your last name" required>
+                                </div>
+                                <div class="error-message" id="lastNameError">Last name is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address <span class="required">*</span></label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email address" required>
+                            </div>
+                            <div class="error-message" id="emailError">Please enter a valid email address</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your phone number">
+                            </div>
+                            <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="password">Password <span class="required">*</span></label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Create a password" required>
+                                <button type="button" class="password-toggle" id="passwordToggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <div class="strength-text" id="strengthText">Password strength: Very weak</div>
+                            </div>
+                            <div class="error-message" id="passwordError">Password must be at least 8 characters with uppercase, lowercase, and number</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="confirmPassword" name="confirm-password" class="form-control" placeholder="Confirm your password" required>
+                                <button type="button" class="password-toggle" id="confirmPasswordToggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="form-button btn-prev" id="prevStep2">Previous</button>
+                            <button type="button" class="form-button btn-next" id="nextStep2">Next Step</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Verification & Terms -->
+                    <div class="form-step" id="step3">
+                        <div class="info-message">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Almost done! Please review and agree to the terms to complete your registration.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="organization">Organization (Optional)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-building"></i>
+                                <input type="text" id="organization" name="organization" class="form-control" placeholder="Enter your organization name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="vehicleCount">Number of Vehicles</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-car"></i>
+                                <select id="vehicleCount" name="vehicleCount" class="form-control">
+                                    <option value="">Select number of vehicles</option>
+                                    <option value="1">1 vehicle</option>
+                                    <option value="2-5">2-5 vehicles</option>
+                                    <option value="6-20">6-20 vehicles</option>
+                                    <option value="21-100">21-100 vehicles</option>
+                                    <option value="100+">100+ vehicles</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="terms">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <label for="terms">
+                                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. 
+                                I understand that SafeSwarm may collect vehicle data to improve safety systems.
+                            </label>
+                        </div>
+
+                        <div class="terms">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <label for="newsletter">
+                                Yes, I'd like to receive updates about new safety features, research findings, 
+                                and community initiatives from SafeSwarm.
+                            </label>
+                        </div>
+
+                        <div class="success-message" id="successMessage">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Registration successful! Check your email to verify your account.</span>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="form-button btn-prev" id="prevStep3">Previous</button>
+                            <button type="submit" class="form-button btn-submit" id="submitForm">Create Account</button>
+                        </div>
+                    </div>
+
+                    </form>
+
+                    <div class="login-link">
+                        Already have an account? <a href="/login">Sign in here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SafeSwarm</h3>
+                    <p>A smart safety system inspired by swarm robotics to eliminate car accidents and protect all road users through real-time coordination and intelligent intervention.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#">Technology</a></li>
+                        <li><a href="#">Safety Features</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Innovation Drive, Tech City</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> support@safeswarm.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 SafeSwarm. All rights reserved. | <a href="#" style="color: #bdc1c6;">Privacy Policy</a> | <a href="#" style="color: #bdc1c6;">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const progressSteps = document.querySelectorAll('.progress-step');
+            const formSteps = document.querySelectorAll('.form-step');
+            const accountTypes = document.querySelectorAll('.account-type');
+            const nextButtons = document.querySelectorAll('.btn-next');
+            const prevButtons = document.querySelectorAll('.btn-prev');
+            const submitButton = document.getElementById('submitForm');
+            const registerForm = document.getElementById('registerForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            const successMessage = document.getElementById('successMessage');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            
+            // Form data storage
+            const formData = {
+                accountType: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                password: '',
+                organization: '',
+                vehicleCount: '',
+                termsAccepted: false,
+                newsletter: false
+            };
+            
+            // Current step tracking
+            let currentStep = 1;
+            
+            // Account Type Selection
+            let selectedAccountType = '';
+            accountTypes.forEach(type => {
+                type.addEventListener('click', () => {
+                    // Remove selected class from all types
+                    accountTypes.forEach(t => t.classList.remove('selected'));
+                    
+                    // Add selected class to clicked type
+                    type.classList.add('selected');
+                    selectedAccountType = type.getAttribute('data-type');
+                    formData.accountType = selectedAccountType;
+                    // set hidden input for backend
+                    const accountTypeHidden = document.getElementById('accountTypeHidden');
+                    if (accountTypeHidden) accountTypeHidden.value = selectedAccountType;
+                    
+                    // Enable next button
+                    document.getElementById('nextStep1').disabled = false;
+                });
+            });
+            
+            // Password visibility toggle
+            passwordToggle.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            confirmPasswordToggle.addEventListener('click', () => {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                confirmPasswordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Password strength checker
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                
+                // Length check
+                if (password.length >= 8) strength += 20;
+                if (password.length >= 12) strength += 10;
+                
+                // Character variety checks
+                if (/[a-z]/.test(password)) strength += 20; // lowercase
+                if (/[A-Z]/.test(password)) strength += 20; // uppercase
+                if (/[0-9]/.test(password)) strength += 20; // numbers
+                if (/[^A-Za-z0-9]/.test(password)) strength += 10; // special chars
+                
+                // Cap at 100
+                strength = Math.min(strength, 100);
+                
+                return strength;
+            }
+            
+            // Update password strength indicator
+            passwordInput.addEventListener('input', () => {
+                const password = passwordInput.value;
+                const strength = checkPasswordStrength(password);
+                
+                // Update visual indicator
+                strengthFill.style.width = `${strength}%`;
+                
+                // Update color and text
+                if (strength < 30) {
+                    strengthFill.style.backgroundColor = 'var(--error)';
+                    strengthText.textContent = 'Password strength: Very weak';
+                    strengthText.style.color = 'var(--error)';
+                } else if (strength < 60) {
+                    strengthFill.style.backgroundColor = 'var(--warning)';
+                    strengthText.textContent = 'Password strength: Weak';
+                    strengthText.style.color = 'var(--warning)';
+                } else if (strength < 80) {
+                    strengthFill.style.backgroundColor = '#ff9800';
+                    strengthText.textContent = 'Password strength: Fair';
+                    strengthText.style.color = '#ff9800';
+                } else {
+                    strengthFill.style.backgroundColor = 'var(--success)';
+                    strengthText.textContent = 'Password strength: Strong';
+                    strengthText.style.color = 'var(--success)';
+                }
+                
+                formData.password = password;
+            });
+            
+            // Form validation functions
+            function validateEmail(email) {
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+            
+            function validatePassword(password) {
+                return password.length >= 8 && 
+                       /[a-z]/.test(password) && 
+                       /[A-Z]/.test(password) && 
+                       /[0-9]/.test(password);
+            }
+            
+            function validatePhone(phone) {
+                if (!phone) return true; // Phone is optional
+                const re = /^[\+]?[1-9][\d]{0,15}$/;
+                return re.test(phone.replace(/[\s\-\(\)]/g, ''));
+            }
+            
+            // Show/hide error messages
+            function showError(inputId, errorId, message) {
+                document.getElementById(inputId).classList.add('error');
+                document.getElementById(errorId).textContent = message;
+                document.getElementById(errorId).classList.add('show');
+            }
+            
+            function hideError(inputId, errorId) {
+                document.getElementById(inputId).classList.remove('error');
+                document.getElementById(errorId).classList.remove('show');
+            }
+            
+            function markSuccess(inputId) {
+                document.getElementById(inputId).classList.remove('error');
+                document.getElementById(inputId).classList.add('success');
+            }
+            
+            // Real-time validation for step 2 fields
+            const step2Inputs = ['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword'];
+            
+            step2Inputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.addEventListener('input', () => {
+                        validateStep2Field(inputId);
+                    });
+                    
+                    input.addEventListener('blur', () => {
+                        validateStep2Field(inputId);
+                    });
+                }
+            });
+            
+            function validateStep2Field(fieldId) {
+                const value = document.getElementById(fieldId).value;
+                const errorId = `${fieldId}Error`;
+                
+                switch(fieldId) {
+                    case 'firstName':
+                    case 'lastName':
+                        if (!value.trim()) {
+                            showError(fieldId, errorId, 'This field is required');
+                            return false;
+                        } else {
+                            hideError(fieldId, errorId);
+                            markSuccess(fieldId);
+                            formData[fieldId] = value;
+                            return true;
+                        }
+                        
+                    case 'email':
+                        if (!validateEmail(value)) {
+                            showError(fieldId, errorId, 'Please enter a valid email address');
+                            return false;
+                        } else {
+                            hideError(fieldId, errorId);
+                            markSuccess(fieldId);
+                            formData.email = value;
+                            return true;
+                        }
+                        
+                    case 'phone':
+                        if (value && !validatePhone(value)) {
+                            showError(fieldId, errorId, 'Please enter a valid phone number');
+                            return false;
+                        } else {
+                            hideError(fieldId, errorId);
+                            if (value) markSuccess(fieldId);
+                            formData.phone = value;
+                            return true;
+                        }
+                        
+                    case 'password':
+                        if (!validatePassword(value)) {
+                            showError(fieldId, errorId, 'Password must be at least 8 characters with uppercase, lowercase, and number');
+                            return false;
+                        } else {
+                            hideError(fieldId, errorId);
+                            markSuccess(fieldId);
+                            formData.password = value;
+                            
+                            // Also validate confirm password if it has value
+                            const confirmValue = confirmPasswordInput.value;
+                            if (confirmValue) {
+                                validateStep2Field('confirmPassword');
+                            }
+                            return true;
+                        }
+                        
+                    case 'confirmPassword':
+                        if (value !== passwordInput.value) {
+                            showError(fieldId, errorId, 'Passwords do not match');
+                            return false;
+                        } else {
+                            hideError(fieldId, errorId);
+                            markSuccess(fieldId);
+                            return true;
+                        }
+                }
+                
+                return true;
+            }
+            
+            // Step navigation functions
+            function updateProgressSteps() {
+                progressSteps.forEach((step, index) => {
+                    if (index < currentStep - 1) {
+                        step.classList.remove('active');
+                        step.classList.add('completed');
+                    } else if (index === currentStep - 1) {
+                        step.classList.add('active');
+                        step.classList.remove('completed');
+                    } else {
+                        step.classList.remove('active');
+                        step.classList.remove('completed');
+                    }
+                });
+                
+                formSteps.forEach((step, index) => {
+                    if (index === currentStep - 1) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+            }
+            
+            function goToStep(step) {
+                currentStep = step;
+                updateProgressSteps();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            function validateStep1() {
+                if (!selectedAccountType) {
+                    alert('Please select an account type to continue.');
+                    return false;
+                }
+                return true;
+            }
+            
+            function validateStep2() {
+                let isValid = true;
+                
+                // Validate all required fields
+                const requiredFields = ['firstName', 'lastName', 'email', 'password'];
+                requiredFields.forEach(field => {
+                    if (!validateStep2Field(field)) {
+                        isValid = false;
+                    }
+                });
+                
+                // Validate confirm password
+                if (passwordInput.value && !validateStep2Field('confirmPassword')) {
+                    isValid = false;
+                }
+                
+                // Validate phone if provided
+                if (document.getElementById('phone').value && !validateStep2Field('phone')) {
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function validateStep3() {
+                const termsCheckbox = document.getElementById('terms');
+                if (!termsCheckbox.checked) {
+                    alert('You must agree to the Terms of Service and Privacy Policy to register.');
+                    return false;
+                }
+                
+                formData.termsAccepted = true;
+                formData.newsletter = document.getElementById('newsletter').checked;
+                formData.organization = document.getElementById('organization').value;
+                formData.vehicleCount = document.getElementById('vehicleCount').value;
+                
+                return true;
+            }
+            
+            // Next button event handlers
+            document.getElementById('nextStep1').addEventListener('click', () => {
+                if (validateStep1()) {
+                    goToStep(2);
+                }
+            });
+            
+            document.getElementById('nextStep2').addEventListener('click', () => {
+                if (validateStep2()) {
+                    goToStep(3);
+                }
+            });
+            
+            // Previous button event handlers
+            document.getElementById('prevStep2').addEventListener('click', () => goToStep(1));
+            document.getElementById('prevStep3').addEventListener('click', () => goToStep(2));
+            
+            // Form submission -> validate then submit to backend
+            submitButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!validateStep1()) { alert('Please select an account type to continue.'); return; }
+                if (!validateStep2()) { alert('Please complete required fields.'); return; }
+                if (!validateStep3()) return;
+
+                // derive username from first + last name
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const usernameHidden = document.getElementById('usernameHidden');
+                if (usernameHidden) usernameHidden.value = (firstName || lastName) ? `${firstName} ${lastName}`.trim() : '';
+
+                submitButton.disabled = true;
+                submitButton.textContent = 'Creating Account...';
+                registerForm.submit();
+            });
+            
+            // Mobile menu toggle
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                if (navLinks.style.display === 'flex') {
+                    navLinks.style.display = 'none';
+                } else {
+                    navLinks.style.display = 'flex';
+                    navLinks.style.flexDirection = 'column';
+                    navLinks.style.position = 'absolute';
+                    navLinks.style.top = '80px';
+                    navLinks.style.right = '20px';
+                    navLinks.style.backgroundColor = 'white';
+                    navLinks.style.padding = '20px';
+                    navLinks.style.borderRadius = '8px';
+                    navLinks.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                    navLinks.style.width = '200px';
+                    navLinks.style.zIndex = '1000';
+                }
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav-links') && !e.target.closest('.mobile-menu-btn')) {
+                    navLinks.style.display = 'none';
+                }
+            });
+            
+            // Demo auto-fill for testing
+            const demoFillButton = document.createElement('button');
+            demoFillButton.textContent = 'Fill Demo Data';
+            demoFillButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--primary);
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 1000;
+            `;
+            
+            demoFillButton.addEventListener('click', () => {
+                // Auto-select account type
+                document.querySelector('.account-type[data-type="personal"]').click();
+                
+                // Fill form fields
+                document.getElementById('firstName').value = 'Alex';
+                document.getElementById('lastName').value = 'Johnson';
+                document.getElementById('email').value = 'demo@safeswarm.com';
+                document.getElementById('phone').value = '+1 (555) 123-4567';
+                document.getElementById('password').value = 'SafeSwarm2023';
+                document.getElementById('confirmPassword').value = 'SafeSwarm2023';
+                document.getElementById('organization').value = 'Demo Corp';
+                document.getElementById('vehicleCount').value = '2-5';
+                document.getElementById('terms').checked = true;
+                document.getElementById('newsletter').checked = true;
+                
+                // Trigger validation
+                step2Inputs.forEach(inputId => validateStep2Field(inputId));
+                
+                alert('Demo data filled! You can now proceed through the form steps.');
+            });
+            
+            document.body.appendChild(demoFillButton);
+            
+            // Initialize form
+            updateProgressSteps();
+            
+            // Disable next button on step 1 until account type is selected
+            document.getElementById('nextStep1').disabled = true;
+        });
+    </script>
+</body>
+</html>

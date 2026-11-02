@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeSwarm | Smart Vehicle Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #00c853;
+            --accent: #ff3d00;
+            --dark: #202124;
+            --light: #f8f9fa;
+            --gray: #5f6368;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h2 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .hero-text h2 span {
+            color: var(--primary);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .flock-animation {
+            width: 400px;
+            height: 300px;
+            position: relative;
+        }
+
+        .vehicle {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
+        }
+
+        .car {
+            background-color: var(--primary);
+        }
+
+        .pedestrian {
+            background-color: var(--secondary);
+            width: 30px;
+            height: 30px;
+        }
+
+        .cyclist {
+            background-color: var(--accent);
+            width: 35px;
+            height: 35px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(26, 115, 232, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(26, 115, 232, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 30px;
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background-color: #f0f7ff;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .step {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .step-connector {
+            position: absolute;
+            top: 50%;
+            right: -40px;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary);
+            opacity: 0.3;
+        }
+
+        .step:last-child .step-connector {
+            display: none;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-column p {
+            color: #bdc1c6;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #bdc1c6;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc1c6;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-text h2 {
+                font-size: 2.8rem;
+            }
+
+            .flock-animation {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .step-connector {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-text h2 {
+                font-size: 2.3rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-car"></i>
+                    <h1>Safe<span>Swarm</span></h1>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="active">Home</a>
+                    <a href="#">How It Works</a>
+                    <a href="#">Technology</a>
+                    <a href="#">Safety Features</a>
+                    <a href="#">Contact</a>
+                </div>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2>Smart Safety System to <span>Eliminate Car Accidents</span></h2>
+                    <p>Every vehicle knows in real time exactly where all other cars, pedestrians, and cyclists are. Our swarm intelligence system constantly monitors everything and instantly intervenes when danger is detected to create a protective, coordinated swarm that puts people first.</p>
+                    <div class="cta-buttons">
+                        <a href="/login" class="btn btn-primary">login</a>
+                        <a href="#" class="btn btn-secondary">Learn More</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="flock-animation" id="flockAnimation">
+                        <!-- Animated vehicles will be placed here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Key System Features</h2>
+                <p>Our swarm-inspired safety system combines advanced technologies to create a protective network for all road users.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <h3>Real-Time Tracking</h3>
+                    <p>Every vehicle, pedestrian, and cyclist is precisely located in real-time using connected vehicle technology and IoT sensors.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Swarm Intelligence</h3>
+                    <p>Inspired by bird flocking behavior, our central AI agent coordinates all vehicles to move safely as a protective swarm.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safety First Intervention</h3>
+                    <p>The system can instantly force any vehicle to brake, slow down, or steer away when it detects danger to humans.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How SafeSwarm Works</h2>
+                <p>The system follows a continuous cycle of monitoring, analysis, and intervention to prevent accidents.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Constant Monitoring</h3>
+                    <p>All vehicles, pedestrians, and cyclists share their real-time position and movement data.</p>
+                    <div class="step-connector"></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Threat Detection</h3>
+                    <p>The central AI analyzes all data to identify potential collision risks and dangerous situations.</p>
+                    <div class="step-connector"></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Instant Intervention</h3>
+                    <p>When danger is detected, the system overrides vehicle controls to brake, slow, or steer away.</p>
+                    <div class="step-connector"></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Swarm Coordination</h3>
+                    <p>All vehicles in the area are coordinated to move safely as a protective swarm around vulnerable users.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Accidents Prevented</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">System Reliability</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">&lt;100ms</div>
+                    <div class="stat-label">Response Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SafeSwarm</h3>
+                    <p>A smart safety system inspired by swarm robotics to eliminate car accidents and protect all road users through real-time coordination and intelligent intervention.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Technology</a></li>
+                        <li><a href="#">Safety Features</a></li>
+                        <li><a href="#">Research Papers</a></li>
+                        <li><a href="#">Partnerships</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Innovation Drive, Tech City</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@safeswarm.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 SafeSwarm. All rights reserved. | Designed for a smarter, safer future on the road.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create flock animation for vehicles, pedestrians, and cyclists
+        const flockAnimation = document.getElementById('flockAnimation');
+        
+        // Vehicle data
+        const vehicleTypes = [
+            {type: 'car', icon: 'fas fa-car', count: 5},
+            {type: 'pedestrian', icon: 'fas fa-walking', count: 3},
+            {type: 'cyclist', icon: 'fas fa-bicycle', count: 2}
+        ];
+        
+        let vehicles = [];
+        let animationId = null;
+        
+        // Initialize vehicles with proper positioning
+        function initVehicles() {
+            // Clear any existing vehicles
+            flockAnimation.innerHTML = '';
+            vehicles = [];
+            
+            // Create vehicles
+            for (let vt of vehicleTypes) {
+                for (let i = 0; i < vt.count; i++) {
+                    const vehicle = document.createElement('div');
+                    vehicle.className = `vehicle ${vt.type}`;
+                    vehicle.innerHTML = `<i class="${vt.icon}"></i>`;
+                    
+                    // Get container dimensions (with fallback)
+                    const containerWidth = flockAnimation.clientWidth || 400;
+                    const containerHeight = flockAnimation.clientHeight || 300;
+                    
+                    // Random starting position within bounds
+                    const x = Math.random() * (containerWidth - 40);
+                    const y = Math.random() * (containerHeight - 40);
+                    
+                    vehicle.style.left = `${x}px`;
+                    vehicle.style.top = `${y}px`;
+                    
+                    // Store vehicle data with initial velocities
+                    vehicles.push({
+                        element: vehicle,
+                        type: vt.type,
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 1.5,
+                        vy: (Math.random() - 0.5) * 1.5,
+                        size: vt.type === 'car' ? 40 : vt.type === 'cyclist' ? 35 : 30
+                    });
+                    
+                    flockAnimation.appendChild(vehicle);
+                }
+            }
+        }
+        
+        // Animate the flock with smoother movement
+        function animateFlock() {
+            const containerWidth = flockAnimation.clientWidth;
+            const containerHeight = flockAnimation.clientHeight;
+            const centerX = containerWidth / 2;
+            const centerY = containerHeight / 2;
+            
+            // Update each vehicle
+            vehicles.forEach(vehicle => {
+                // 1. Move towards center (cohesion) - weaker force
+                const cohesionFactor = 0.005;
+                const dx = centerX - vehicle.x;
+                const dy = centerY - vehicle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > 0) {
+                    vehicle.vx += (dx / distance) * cohesionFactor * distance * 0.1;
+                    vehicle.vy += (dy / distance) * cohesionFactor * distance * 0.1;
+                }
+                
+                // 2. Avoid edges
+                const margin = 20;
+                if (vehicle.x < margin) vehicle.vx += 0.05;
+                if (vehicle.x > containerWidth - vehicle.size - margin) vehicle.vx -= 0.05;
+                if (vehicle.y < margin) vehicle.vy += 0.05;
+                if (vehicle.y > containerHeight - vehicle.size - margin) vehicle.vy -= 0.05;
+                
+                // 3. Add some randomness for natural movement
+                vehicle.vx += (Math.random() - 0.5) * 0.1;
+                vehicle.vy += (Math.random() - 0.5) * 0.1;
+                
+                // 4. Limit speed
+                const speedLimit = 1.2;
+                const speed = Math.sqrt(vehicle.vx * vehicle.vx + vehicle.vy * vehicle.vy);
+                if (speed > speedLimit) {
+                    vehicle.vx = (vehicle.vx / speed) * speedLimit;
+                    vehicle.vy = (vehicle.vy / speed) * speedLimit;
+                }
+                
+                // 5. Apply friction
+                const friction = 0.98;
+                vehicle.vx *= friction;
+                vehicle.vy *= friction;
+                
+                // Update position
+                vehicle.x += vehicle.vx;
+                vehicle.y += vehicle.vy;
+                
+                // Ensure vehicles stay within bounds
+                vehicle.x = Math.max(0, Math.min(containerWidth - vehicle.size, vehicle.x));
+                vehicle.y = Math.max(0, Math.min(containerHeight - vehicle.size, vehicle.y));
+                
+                // Apply new position
+                vehicle.element.style.left = `${vehicle.x}px`;
+                vehicle.element.style.top = `${vehicle.y}px`;
+                
+                // Add slight rotation for direction
+                const angle = Math.atan2(vehicle.vy, vehicle.vx) * (180 / Math.PI);
+                vehicle.element.style.transform = `rotate(${angle}deg)`;
+            });
+            
+            // Continue animation
+            animationId = requestAnimationFrame(animateFlock);
+        }
+        
+        // Initialize and start animation
+        function startAnimation() {
+            // Wait for DOM to be fully loaded and container to have dimensions
+            if (flockAnimation.clientWidth === 0) {
+                setTimeout(startAnimation, 100);
+                return;
+            }
+            
+            initVehicles();
+            
+            // Stop any existing animation
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+            // Start new animation
+            animateFlock();
+        }
+        
+        // Animated counter for stats
+        function animateCounter(element, target, duration) {
+            let start = 0;
+            const increment = target / (duration / 16); // 60fps
+            
+            const update = () => {
+                start += increment;
+                if (start < target) {
+                    element.textContent = Math.floor(start).toLocaleString();
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = target.toLocaleString();
+                }
+            };
+            
+            update();
+        }
+        
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start flock animation
+            startAnimation();
+            
+            // Reinitialize animation on window resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(startAnimation, 250);
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                if (navLinks.style.display === 'flex') {
+                    navLinks.style.display = 'none';
+                } else {
+                    navLinks.style.display = 'flex';
+                    navLinks.style.flexDirection = 'column';
+                    navLinks.style.position = 'absolute';
+                    navLinks.style.top = '80px';
+                    navLinks.style.right = '20px';
+                    navLinks.style.backgroundColor = 'white';
+                    navLinks.style.padding = '20px';
+                    navLinks.style.borderRadius = '8px';
+                    navLinks.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                    navLinks.style.width = '200px';
+                    navLinks.style.zIndex = '1000';
+                }
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav-links') && !e.target.closest('.mobile-menu-btn')) {
+                    navLinks.style.display = 'none';
+                }
+            });
+            
+            // Close mobile menu when clicking a link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        navLinks.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Animate stats when they come into view
+            const statsSection = document.querySelector('.stats');
+            const statNumber = document.querySelector('.stat-number');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Start counter animation
+                        animateCounter(statNumber, 125000, 2000);
+                        
+                        // Add subtle animation to all stat cards
+                        const statCards = document.querySelectorAll('.stat-card');
+                        statCards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.style.transform = 'translateY(0)';
+                                card.style.opacity = '1';
+                            }, index * 200);
+                        });
+                        
+                        // Unobserve after animation
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            // Initialize stat cards with hidden state
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.style.transform = 'translateY(20px)';
+                card.style.opacity = '0.5';
+                card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+            });
+            
+            // Observe stats section
+            if (statsSection) {
+                observer.observe(statsSection);
+            }
+            
+            // Add hover effect to feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Add click effect to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', () => {
+                    button.style.transform = 'translateY(-1px) scale(0.98)';
+                });
+                
+                button.addEventListener('mouseup', () => {
+                    button.style.transform = 'translateY(-3px)';
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    button.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+        
+        // Handle page visibility changes (pause animation when tab is not visible)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+            } else {
+                if (!animationId && flockAnimation.children.length > 0) {
+                    animateFlock();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

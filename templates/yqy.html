@@ -1,0 +1,478 @@
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tunisia GPS Route Map</title>
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #e43a15 0%, #e65245 100%);
+            color: white;
+            padding: 25px 0;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .tunisia-flag {
+            display: flex;
+            align-items: center;
+        }
+        
+        .flag {
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(to right, #e70013 33%, white 33%, white 66%, #e70013 66%);
+            border-radius: 3px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .flag::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background-color: #e70013;
+            border-radius: 50%;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .map-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            height: 500px;
+            position: relative;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .route-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #e43a15;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .info-title {
+            font-weight: 600;
+            color: #e43a15;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .route-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .detail-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: #f8f9fa;
+            padding: 18px;
+            border-radius: 8px;
+            border-top: 3px solid #3498db;
+        }
+        
+        .detail-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .detail-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #e43a15;
+        }
+        
+        .unit {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .instructions {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .instruction-list {
+            list-style-type: none;
+        }
+        
+        .instruction-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .instruction-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .step-icon {
+            background-color: #e43a15;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 8px;
+            z-index: 10;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e43a15;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>Tunisia GPS Route Map</h1>
+                    <p class="subtitle">Navigate from Monastir to your destination</p>
+                </div>
+                <div class="tunisia-flag">
+                    <div class="flag"></div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading map and calculating route...</p>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="route-info">
+                    <div class="info-box">
+                        <div class="info-title">Route Information</div>
+                        <p>This map shows the route from <strong>Monastir, Tunisia</strong> to <strong>{{ destination }}</strong>. The route is calculated using road network data.</p>
+                    </div>
+                    
+                    <div class="route-details">
+                        <div class="detail-card">
+                            <h4><i class="fas fa-route"></i> Distance</h4>
+                            <div class="detail-value" id="distance">--</div>
+                            <span class="unit">kilometers</span>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-clock"></i> Estimated Time</h4>
+                            <div class="detail-value" id="duration">--</div>
+                            <span class="unit">hours:minutes</span>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-map-marker-alt"></i> Destination</h4>
+                            <div class="detail-value">{{ destination }}</div>
+                            <span class="unit">Tunisia</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-list-ol"></i> Route Instructions</h3>
+                    <ul class="instruction-list" id="instructions">
+                        <!-- Instructions will be populated by JavaScript -->
+                        <li><span class="step-icon">1</span> Start from Monastir, Tunisia</li>
+                        <li><span class="step-icon">2</span> Follow the route to {{ destination }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Tunisia GPS Map | Route data is simulated for demonstration purposes</p>
+            <p>This page uses Leaflet.js for mapping. In a production environment, you would use a routing service like OSRM or Mapbox.</p>
+        </footer>
+    </div>
+
+    <!-- Leaflet JS for maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // This would normally come from Flask/Jinja2 template
+        // For demo purposes, we'll use a default value
+        const destination = "{{ destination|default('Tunis') }}";
+        
+        // Coordinates for Tunisian cities
+        const cityCoordinates = {
+            "Monastir": { lat: 35.7833, lng: 10.8333 },
+            "Tunis": { lat: 36.8008, lng: 10.1800 },
+            "Sfax": { lat: 34.7400, lng: 10.7600 },
+            "Sousse": { lat: 35.8333, lng: 10.6333 },
+            "Kairouan": { lat: 35.6772, lng: 10.1008 },
+            "Bizerte": { lat: 37.2744, lng: 9.8739 },
+            "Gabès": { lat: 33.8833, lng: 10.1167 },
+            "Ariana": { lat: 36.8625, lng: 10.1956 },
+            "Gafsa": { lat: 34.4167, lng: 8.7833 },
+            "El Kef": { lat: 36.1822, lng: 8.7147 }
+        };
+        
+        // Default to Tunis if destination not in our list
+        const endCity = destination in cityCoordinates ? destination : "Tunis";
+        const startCoords = cityCoordinates["Monastir"];
+        const endCoords = cityCoordinates[endCity];
+        
+        // Wait for page to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map centered on Tunisia
+            const map = L.map('map').setView([34.0, 9.5], 7);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18
+            }).addTo(map);
+            
+            // Add start marker (Monastir)
+            const startMarker = L.marker([startCoords.lat, startCoords.lng]).addTo(map)
+                .bindPopup('<b>Start: Monastir</b><br>Tunisia')
+                .openPopup();
+            
+            // Add end marker (destination)
+            const endMarker = L.marker([endCoords.lat, endCoords.lng]).addTo(map)
+                .bindPopup(`<b>Destination: ${endCity}</b><br>Tunisia`);
+            
+            // Function to calculate distance between two coordinates (simplified)
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371; // Earth's radius in km
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+            
+            // Calculate distance and estimated travel time
+            const distance = calculateDistance(
+                startCoords.lat, startCoords.lng, 
+                endCoords.lat, endCoords.lng
+            );
+            
+            // In a real application, you would use a routing service like OSRM
+            // For this demo, we'll create a polyline with some intermediate points
+            function createRoute(start, end) {
+                // Create a simple curved route with one intermediate point
+                const midLat = (start.lat + end.lat) / 2 + 0.5;
+                const midLng = (start.lng + end.lng) / 2 - 0.5;
+                
+                return [
+                    [start.lat, start.lng],
+                    [midLat, midLng],
+                    [end.lat, end.lng]
+                ];
+            }
+            
+            // Create and add the route polyline to the map
+            const routeCoords = createRoute(startCoords, endCoords);
+            const routePolyline = L.polyline(routeCoords, {
+                color: '#e43a15',
+                weight: 5,
+                opacity: 0.7,
+                dashArray: '10, 10'
+            }).addTo(map);
+            
+            // Fit map to show the entire route
+            map.fitBounds(routePolyline.getBounds());
+            
+            // Update distance and duration display
+            document.getElementById('distance').textContent = distance.toFixed(1);
+            
+            // Calculate estimated time (assuming average speed of 80 km/h)
+            const hours = distance / 80;
+            const hoursInt = Math.floor(hours);
+            const minutes = Math.round((hours - hoursInt) * 60);
+            document.getElementById('duration').textContent = 
+                `${hoursInt}:${minutes.toString().padStart(2, '0')}`;
+            
+            // Generate route instructions
+            const instructionsList = document.getElementById('instructions');
+            instructionsList.innerHTML = '';
+            
+            const instructions = [
+                `Start from Monastir, Tunisia`,
+                `Head north on Route C82`,
+                `Continue onto Route A1`,
+                `Follow signs toward ${endCity}`,
+                `Take exit toward ${endCity} city center`,
+                `Continue on main road to reach your destination`,
+                `Arrive at ${endCity}, Tunisia`
+            ];
+            
+            instructions.forEach((instruction, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="step-icon">${index + 1}</span> ${instruction}`;
+                instructionsList.appendChild(li);
+            });
+            
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
+            
+            // Add custom markers with icons
+            startMarker.setIcon(
+                L.divIcon({
+                    html: '<div style="background-color: #2ecc71; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);">S</div>',
+                    iconSize: [40, 40],
+                    iconAnchor: [20, 40],
+                    className: 'start-marker'
+                })
+            );
+            
+            endMarker.setIcon(
+                L.divIcon({
+                    html: `<div style="background-color: #e43a15; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);">D</div>`,
+                    iconSize: [40, 40],
+                    iconAnchor: [20, 40],
+                    className: 'end-marker'
+                })
+            );
+        });
+    </script>
+</body>
+</html>
